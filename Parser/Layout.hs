@@ -25,7 +25,7 @@ pVar = Var <$> some letterChar <*> many pIndex
     where pIndex = char '[' *> withPosI (pExpr (withPosI pVar)) <* char ']' <?> "var index"
 
 pLayout :: Parser () -> Parser [LayoutLexPos]
-pLayout indentP = concat <$> many (pLineOrLoop indentP)
+pLayout indentP = concat <$> some (pLineOrLoop indentP)
 
 pLineOrLoop :: Parser () -> Parser [LayoutLexPos]
 pLineOrLoop indentP = label "line or vertical loop" $ do
@@ -37,16 +37,16 @@ pLineOrLoop indentP = label "line or vertical loop" $ do
         loopEnd begin line1 = try . one $ do
             mid <- getSourcePos
             let b1 = LBlockLex <$> Info [(begin, mid)] line1
-            _  <- string ".." <* pNewLine indentP
+            try $ indentP <* string ".." <* pNewLine
             b2 <- withPosI $ LBlockLex <$> pLine indentP
             end <- getSourcePos
             return $ Info [(begin, end)] $ LLoopLex b1 "\n" b2
 
 pLine :: Parser () -> Parser [LayoutLexPos]
-pLine indentP = pTerms <> one (pNewLine indentP)
+pLine indentP = indentP *> pTerms <> one pNewLine
 
-pNewLine :: Parser () -> Parser LayoutLexPos
-pNewLine indentP = withPosI . label "new line" $ LStringLex "\n" <$ newline <* try indentP
+pNewLine :: Parser LayoutLexPos
+pNewLine = withPosI . label "new line" $ LStringLex "\n" <$ newline
 
 pTerms :: Parser [LayoutLexPos]
 pTerms = many (pSpace <|> pTermOrLoop)

@@ -1,27 +1,13 @@
 @InpFormat 
+    ```
     T N M
     a[1] .. a[N]
     b[1] .. b[M]
+    ```
 @Bounds
     0 <= T, a[i], b[j] <= 100
     0 <= N, M <= 1000
     N + M > 0
-
-@OutpFormat
-    meanT
-    action[1]
-    ..
-    action[?aCount] // Actions will be read while current string is like an action  
-@Bounds
-    meanT : Real(.3)
-    0 <= meanT <= a[1] + .. + a[N] + b[1] + .. b[M] + T
-    action[i]
-        = "Switch road from `switchR[i]` to `(3 - switchR[i])`"
-        | "Car `car1[i]` from road 1"
-        | "Car `car2[i]` from road 2"
-    1 <= switchR[i], carR[i] <= 2
-    1 <= car1[i] <= N
-    1 <= car2[i] <= M
 
 @SubTasks
     ##0 Tests from statement 

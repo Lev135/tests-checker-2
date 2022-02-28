@@ -163,7 +163,7 @@ instance Show (Var i) where
 
 instance Show (Loop i) where
     show Loop{lBody, lIdxVar, lFirst, lLast, lSepStr}
-        = "<" ++ show lBody ++ lSepStr ++ "|" 
+        = "<" ++ show lBody ++ "|"++ show lSepStr ++ "|" 
             ++ lIdxVar ++ "=" ++ show lFirst ++ ".." ++ show lLast ++ ">"
 
 instance Show (LayoutItem i) where
